@@ -4,6 +4,7 @@ import { AuthContext } from '../Providers/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Swal from 'sweetalert2';
+import SocailLogin from '../Shared/SocailLogin/SocailLogin';
 
 
 const Login = () => {
@@ -102,7 +103,6 @@ const Login = () => {
 
 
 
-
                             <div className="form-control mt-6">
                             {/* Todo : button disabled for captcha */}
                                 <input disabled={false} className="btn btn-primary" type="submit" value="Login" />
@@ -110,8 +110,9 @@ const Login = () => {
                         </form>
                         <p> <small> new Here?
                             <Link to="/signup">Create an Account</Link>
-                        </small>
-                        </p>
+                        </small></p>
+
+                        <SocailLogin></SocailLogin>
                     </div>
                 </div>
             </div>
