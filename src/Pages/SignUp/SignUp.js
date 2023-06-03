@@ -3,8 +3,8 @@ import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
+import SocialLogin from "../Shared/SocailLogin/SocailLogin";
 import { AuthContext } from "../Providers/AuthProvider";
-import SocailLogin from "../Shared/SocailLogin/SocailLogin";
 
 const SignUp = () => {
 
@@ -13,20 +13,24 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const onSubmit = data => {
+
         createUser(data.email, data.password)
             .then(result => {
+
                 const loggedUser = result.user;
+                console.log(loggedUser);
+
                 updateUserProfile(data.name, data.photoURL)
                     .then(() => {
-                        const savedUser = { name: data.name, email: data.email }
+                        const saveUser = { name: data.name, email: data.email }
                         fetch('http://localhost:5000/users', {
                             method: 'POST',
                             headers: {
                                 'content-type': 'application/json'
                             },
-                            body: JSON.stringify(savedUser)
+                            body: JSON.stringify(saveUser)
                         })
-                            .then(response => response.json())
+                            .then(res => res.json())
                             .then(data => {
                                 if (data.insertedId) {
                                     reset();
@@ -40,6 +44,9 @@ const SignUp = () => {
                                     navigate('/');
                                 }
                             })
+
+
+
                     })
                     .catch(error => console.log(error))
             })
@@ -86,21 +93,23 @@ const SignUp = () => {
                                 <input type="password"  {...register("password", {
                                     required: true,
                                     minLength: 6,
-                                    maxLength: 40,
-
+                                    maxLength: 20,
+                                    pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/
                                 })} placeholder="password" className="input input-bordered" />
                                 {errors.password?.type === 'required' && <p className="text-red-600">Password is required</p>}
                                 {errors.password?.type === 'minLength' && <p className="text-red-600">Password must be 6 characters</p>}
                                 {errors.password?.type === 'maxLength' && <p className="text-red-600">Password must be less than 20 characters</p>}
-
-
+                                {errors.password?.type === 'pattern' && <p className="text-red-600">Password must have one Uppercase one lower case, one number and one special character.</p>}
+                                <label className="label">
+                                    <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                </label>
                             </div>
                             <div className="form-control mt-6">
                                 <input className="btn btn-primary" type="submit" value="Sign Up" />
                             </div>
                         </form>
                         <p><small>Already have an account <Link to="/login">Login</Link></small></p>
-                        <SocailLogin></SocailLogin>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>
